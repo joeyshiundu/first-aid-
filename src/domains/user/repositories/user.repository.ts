@@ -14,7 +14,10 @@ export class UserRepository implements IUserRepository {
     return userRecord ? (userRecord.toJSON() as UserEntity) : null;
   }
 
-
+  async findAll(): Promise<UserEntity[]> {
+    const users = await UserModel.findAll();
+    return users.map(user => user.toJSON() as UserEntity);
+  }
 
   async create(user: UserEntity): Promise<UserEntity> {
     const newUser = await UserModel.create(user);
