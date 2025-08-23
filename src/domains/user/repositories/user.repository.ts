@@ -3,6 +3,8 @@
 import { IUserRepository } from './user.repository.interface';
 import { UserModel } from '../../../infrastructure/db/models/user';
 import { UserEntity } from '../entities/user.entity';
+import { ContactDataModel } from 'infrastructure/db/models/contact_data';
+import { ContactDataEntity } from '../entities/contactData.entity';
 
 export class UserRepository implements IUserRepository {
   async findById(id: number): Promise<UserEntity | null> {
@@ -12,6 +14,13 @@ export class UserRepository implements IUserRepository {
   async findByUserId(userId: number): Promise<UserEntity | null> {
     const userRecord = await UserModel.findOne({ where: { user_id: userId } });
     return userRecord ? (userRecord.toJSON() as UserEntity) : null;
+  }
+
+  async findByEmail(email: string): Promise<UserEntity | null> {
+    const contact = await ContactDataModel.findOne({ where: { email } });
+    if (!contact) return null;
+    const user = await UserModel.findOne({ where: { contact_data_id: contact.id } });
+    return user ? (user.toJSON() as UserEntity) : null;
   }
 
   async findAll(): Promise<UserEntity[]> {

@@ -1,19 +1,29 @@
 // Update the import path below if the file exists elsewhere, or create the file if missing.
+
 import { IUserRepository } from '../../../../domains/user/repositories/user.repository.interface';
 import { ITokenService } from '../../../services/token.service.interface';
-import { IEmailService } from '../../../application/services/email.service.interface';
+import { IEmailService } from '../../../../application/services/email.service.interface';
+import { IContactDataRepository } from '../../../../domains/user/repositories/contact-data.repository.interface';
 
 export class RequestPasswordResetUseCase {
     constructor(
         private userRepository: IUserRepository,
+        private contactDataRepository: IContactDataRepository,
         private tokenService: ITokenService,
         private emailService: IEmailService
     ) {}
 
-    async execute(email: string): Promise<void> {
-        const user = await this.userRepository.findByEmail(email);
+    async execute(userId: number): Promise<void> {
+        const user = await this.userRepository.findById(userId);
         if (!user) {
             // Don't reveal whether user exists → prevent enumeration attacks
+            return;
+        }
+
+        // Fetch contact data to get the email
+        const contactData = await this.contactDataRepository.findById(user.contact_data_id);
+        if (!contactData) {
+            // Don't reveal whether contact data exists
             return;
         }
 
@@ -26,6 +36,7 @@ export class RequestPasswordResetUseCase {
 
         // Send email
         const resetLink = `https://yourapp.com/reset-password?token=${resetToken}`;
-        await this.emailService.sendMail(user.email, 'Password Reset', `Click here: ${resetLink}`);
+        await this.emailService.sendMail(contactData.email, 'Password Reset', `Click here: ${resetLink}`);
     }
 }
+ 

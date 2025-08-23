@@ -14,5 +14,7 @@ export interface UserEntity {
   is_certified: boolean;
   cert_id?: number;
   created_on: Date;
+  resetToken?: string;
+  resetTokenExpiry?: Date;
 }
 
