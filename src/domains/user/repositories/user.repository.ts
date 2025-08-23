@@ -19,7 +19,7 @@ export class UserRepository implements IUserRepository {
   async findByEmail(email: string): Promise<UserEntity | null> {
     const contact = await ContactDataModel.findOne({ where: { email } });
     if (!contact) return null;
-    const user = await UserModel.findOne({ where: { contact_data_id: contact.id } });
+    const user = await UserModel.findOne({ where: { contact_data_id: contact.contact_data_id } });
     return user ? (user.toJSON() as UserEntity) : null;
   }
 

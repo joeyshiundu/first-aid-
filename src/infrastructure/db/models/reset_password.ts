@@ -1,7 +1,6 @@
 
 import { DataTypes, Model, Sequelize } from "sequelize";
 import { ResetPasswordEntity } from "domains/user/entities/resetPassword.entity";
-import { sequelize } from "./index"; // Adjust the path if your sequelize instance is exported elsewhere
 
 export class ResetPasswordModel extends Model<ResetPasswordEntity> {
     public reset_id!: number;

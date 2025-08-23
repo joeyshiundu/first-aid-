@@ -5,4 +5,5 @@ export interface IContactDataRepository {
   getContactDataById(id: number): Promise<ContactDataEntity | null>;
   updateContactData(id: number, data: Partial<ContactDataEntity>): Promise<ContactDataEntity | null>;
   deleteContactData(id: number): Promise<boolean>;
+  
 }

@@ -10,7 +10,7 @@ type SafeUserEntity = Omit<UserEntity, 'password'>;
 export class LoginUseCase {
     constructor(private userRepository: IUserRepository, private tokenService: ITokenService) {}
 
-    async execute(userId: number, password: string): Promise<SafeUserEntity | null> {
+    async execute(userId: number, password: string): Promise<{ user: SafeUserEntity; token: string } | null> {
         // Find the user by userId
         const user = await this.userRepository.findByUserId(userId);
         if (!user) {
