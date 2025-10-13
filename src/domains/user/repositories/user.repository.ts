@@ -39,6 +39,11 @@ export class UserRepository implements IUserRepository {
     return updated ? (updated.toJSON() as UserEntity) : user;
   }
 
+  async deactivate(user: UserEntity): Promise<UserEntity> {
+    await UserModel.update({ ...user, status: 'inactive' }, { where: { user_id: user.user_id } });
+    const updated = await UserModel.findByPk(user.user_id);
+    return updated ? (updated.toJSON() as UserEntity) : { ...user, status: 'inactive' };
+  }
   async delete(id: number): Promise<void> {
     await UserModel.destroy({ where: { user_id: id } });
   }
