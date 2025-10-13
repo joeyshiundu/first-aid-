@@ -5,4 +5,5 @@ export interface IEmergencyRepository {
   create(emergency: EmergencyEntity): Promise<EmergencyEntity>;
   update(emergency: EmergencyEntity): Promise<EmergencyEntity | null>;
   delete(emergencyId: number): Promise<boolean>;
+  findByUserId(userId: number): Promise<EmergencyEntity[]>;
 }

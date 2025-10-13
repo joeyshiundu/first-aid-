@@ -22,4 +22,9 @@ export class EmergencyRepository implements IEmergencyRepository {
         const deletedCount = await EmergencyLogModel.destroy({ where: { emergency_id: emergencyId } });
         return deletedCount > 0;
     }
+
+    async findByUserId(userId: number): Promise<EmergencyEntity[]> {
+        const emergencies = await EmergencyLogModel.findAll({ where: { user_id: userId } });
+        return emergencies.map(e => e.toJSON() as EmergencyEntity);
+    }
 }
