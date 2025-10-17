@@ -9,3 +9,4 @@ export class GetUserEmergencyLogsUseCase {
         return emergencies;
     }
 }
+

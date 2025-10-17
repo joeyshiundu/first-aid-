@@ -10,6 +10,7 @@ import { initContactDataModel, ContactDataModel } from './contact_data';
 import { initEmergencyLogModel, EmergencyLogModel } from './emergency_log';
 import { initVideoModel, VideoModel } from './video';
 import { initWHONotificationModel, WHONotificationModel } from './who_notification';
+import { initResetPasswordModel, ResetPasswordModel } from './reset_password';
 
 export function initializeModels(sequelize: Sequelize) {
   // Initialize all models
@@ -25,6 +26,7 @@ export function initializeModels(sequelize: Sequelize) {
     emergency_log: initEmergencyLogModel(sequelize),
     video: initVideoModel(sequelize),
     who_notification: initWHONotificationModel(sequelize),
+    reset_password: initResetPasswordModel(sequelize),
   };
 
   // Set up associations
