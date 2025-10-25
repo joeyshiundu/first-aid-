@@ -30,18 +30,20 @@ export function initResetPasswordModel(sequelizeInstance: Sequelize) {
             },
             resetToken: {
                 type: DataTypes.STRING,
+                field: 'token_hash', // Map to the 'token_hash' column in the DB
                 allowNull: false,
             },
             resetTokenExpiry: {
                 type: DataTypes.DATE,
+                field: 'expires_at', // Map to the 'expires_at' column in the DB
                 allowNull: false,
             },
         },
         {
             sequelize: sequelizeInstance,
             modelName: "ResetPassword",
+            tableName: "reset_password",
         }
     );
     return ResetPasswordModel;
 }
-
