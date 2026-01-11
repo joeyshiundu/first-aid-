@@ -11,4 +11,4 @@ export const CreateNotificationSchema = z.object({
 });
 
 // Automatically infer the TypeScript type from the schema
-export type CreateNotificationDto = z.infer<typeof CreateNotificationSchema>;
+export type CreateNotificationDTO = z.infer<typeof CreateNotificationSchema>;

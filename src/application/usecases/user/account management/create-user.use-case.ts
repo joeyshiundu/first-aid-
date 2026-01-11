@@ -1,13 +1,19 @@
-import { CreateUserDTO } from "domains/user/dtos/create-user.dto";
-import { UserEntity } from "domains/user/entities/user.entity";
-import { IUserRepository } from "domains/user/repositories/user.repository.interface";
+import { CreateUserDTO } from "@domain/user/dtos/create-user.dto";
+import { UserEntity } from "@domain/user/entities/user.entity";
+import { IUserRepository } from "@domain/user/repositories/user.repository.interface";
 import bcrypt from "bcrypt";
 
 
 export class CreateUserUseCase {
     constructor(private userRepository: IUserRepository) {}
 
-    async execute(data: CreateUserDTO): Promise<UserEntity> {
+    async execute(data: CreateUserDTO): Promise<Omit<UserEntity, 'password'>> {
+        // 1. Check if user already exists
+        const existingUser = await this.userRepository.findByEmail(data.email);
+        if (existingUser) {
+            throw new Error("User with this email already exists.");
+        }
+
         // Hash the password before saving
         const hashedPassword = await bcrypt.hash(data.password, 10);
         
@@ -34,7 +40,9 @@ export class CreateUserUseCase {
         };
 
         // Save the user to the repository
-        return await this.userRepository.create(userToCreate as UserEntity);
+        const newUser = await this.userRepository.create(userToCreate as UserEntity);
+        const { password, ...userProfile } = newUser;
+        return userProfile;
     }
     
 }

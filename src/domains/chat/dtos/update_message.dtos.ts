@@ -1,5 +1,9 @@
-export interface UpdateChatMessageDTO {
-  messageId: number;          // ID of the message to update
-  content: string;            // Updated message content
-  timestamp?: Date;          // Optional timestamp (auto-generated if not provided)
-}
+import { z } from 'zod';
+
+export const UpdateChatMessageSchema = z.object({
+  messageId: z.number().int(),
+  content: z.string().min(1, "Content cannot be empty"),
+  timestamp: z.coerce.date().optional(),
+});
+
+export type UpdateChatMessageDTO = z.infer<typeof UpdateChatMessageSchema>;

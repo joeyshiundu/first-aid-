@@ -1,7 +1,7 @@
-import { NotificationEntity } from 'domains/notification/entities/notification.entity';
-import { CreateNotificationDTO } from '../dtos/create_notification.dto';
-import { INotificationRepository } from './notification.repository.interface';
-import { WHONotificationModel } from '../../../infrastructure/db/models/who_notification';
+import type { NotificationEntity } from '@domain/notification/entities/notification.entity';
+import type { CreateNotificationDTO } from '../dtos/create_notification.dto';
+import type { INotificationRepository } from './notification.repository.interface';
+import { WHONotificationModel } from '@infrastructure/db/models/who_notification';
 
 export class NotificationRepository implements INotificationRepository {
   async findById(notificationId: number): Promise<NotificationEntity | null> {
@@ -9,8 +9,13 @@ export class NotificationRepository implements INotificationRepository {
     return notification ? (notification.toJSON() as NotificationEntity) : null;
   }
 
-  async create(notification: CreateNotificationDTO): Promise<NotificationEntity> {
-    const newNotification = await WHONotificationModel.create(notification);
+  async create(notification: CreateNotificationDTO, issuerId: number): Promise<NotificationEntity> {
+    const newNotification = await WHONotificationModel.create({
+      ...notification,
+      issuer_id: issuerId,
+      issued_at: new Date(),
+      is_read: false,
+    });
     return newNotification.toJSON() as NotificationEntity;
   }
 
