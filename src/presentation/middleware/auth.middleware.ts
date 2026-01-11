@@ -20,18 +20,21 @@ declare global {
 }
 
 export const createAuthMiddleware = (tokenService: ITokenService) => {
-  return async (req: Request, res: Response, next: NextFunction) => {
+  // Explicitly setting the return type to Promise<void> makes the contract clear.
+  return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({ message: 'Authentication required. No token provided.' });
+      res.status(401).json({ message: 'Authentication required. No token provided.' });
+      return; // Exit the function after sending the response
     }
 
     const token = authHeader.split(' ')[1];
     const payload = tokenService.verifyAccessToken(token) as JwtPayload | null;
 
     if (!payload || typeof payload === 'string' || !payload.id) {
-      return res.status(401).json({ message: 'Authentication failed. Invalid token.' });
+      res.status(401).json({ message: 'Authentication failed. Invalid token.' });
+      return; // Exit the function after sending the response
     }
 
     // Attach user to the request object for subsequent handlers

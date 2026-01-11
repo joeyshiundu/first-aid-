@@ -2,6 +2,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import { LoginUseCase } from '../../application/usecases/user/authentication management/login-user.use-case';
 import { UserRepository } from '../../domains/user/repositories/user.repository';
 import { TokenService } from '../../application/services/token.service';
+import { LoginSchema } from '../../domains/user/dtos/auth.dto';
 
 const router = express.Router();
 
@@ -12,13 +13,9 @@ const loginUseCase = new LoginUseCase(userRepo, tokenService);
 
 // POST /auth/login
 const loginHandler = async (req: Request, res: Response, next: NextFunction) => {
-  const { email, password } = req.body;
-
-  if (!email || !password) {
-    return res.status(400).json({ message: 'Email and password are required.' });
-  }
-
   try {
+    // Validate request body against the Zod schema
+    const { email, password } = LoginSchema.parse(req.body);
     const result = await loginUseCase.execute(email, password);
     res.json(result);
   } catch (err) {

@@ -1,8 +1,7 @@
 export interface BioDataEntity {
     bio_data_id: number;
     blood_group: 'A+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-' | 'O+' | 'O-';
-    age: number;
-    allergies: string;
+    allergies: string[];
     weight: number;
     gender: 'M' | 'F';
     height: number;

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { InactiveAccountError, InvalidCredentialsError } from '../../application/errors/auth.errors';
+import { InactiveAccountError, InvalidCredentialsError, UserNotFoundError } from '../../application/errors/auth.errors';
 import { ZodError } from 'zod';
 
 /**
@@ -25,6 +25,10 @@ export const errorHandlerMiddleware = (err: Error, req: Request, res: Response, 
 
   if (err instanceof InactiveAccountError) {
     return res.status(403).json({ message: err.message });
+  }
+
+  if (err instanceof UserNotFoundError) {
+    return res.status(404).json({ message: err.message });
   }
 
   // Generic fallback for any other unhandled errors

@@ -1,4 +1,3 @@
-// ChatMessageResponseDTO.ts
 export interface ChatMessageResponseDTO {
   messageId: number;
   senderId: number;

@@ -16,11 +16,9 @@ const userRepo = new UserRepository();
 const tokenService = new TokenService();
 const emailService = new EmailService();
 const resetRepo = new ResetPasswordRepository();
-
-// Middleware
 const authMiddleware = createAuthMiddleware(tokenService);
 
-// Use Cases
+// --- Use Cases ---
 const requestPasswordResetUseCase = new RequestPasswordResetUseCase(userRepo, tokenService, emailService, resetRepo);
 const changePasswordUseCase = new ChangePasswordUseCase(userRepo);
 const performPasswordResetUseCase = new PerformPasswordResetUseCase(userRepo, resetRepo, tokenService);
@@ -40,11 +38,13 @@ router.post('/request', async (req: Request, res: Response, next: NextFunction) 
 // POST /password/change
 // This route is now protected by the authMiddleware
 router.post('/change', authMiddleware, async (req: Request, res: Response, next: NextFunction) => {
-  const userId = req.user!.id; // We can use non-null assertion because authMiddleware guarantees req.user exists
+  // Safely access the user ID. This is more robust and avoids potential runtime errors.
+  const userId = req.user?.id;
+  if (!userId) return res.status(401).json({ message: 'Unauthorized: User ID missing from token.' });
 
   try {
     const { oldPassword, newPassword } = ChangePasswordSchema.parse(req.body);
-    const success = await changePasswordUseCase.execute(userId, oldPassword, newPassword);
+    await changePasswordUseCase.execute(userId, oldPassword, newPassword);
     // The use case will now throw an error on failure, which is caught below.
     res.status(200).json({ message: 'Password changed successfully.' });
   } catch (err) {
