@@ -1,8 +1,8 @@
 //import { CreateUserDTO } from "domains/user/dtos/create-user.dto";  (Didnt need this import)
-import { UserEntity } from "domains/user/entities/user.entity";
-import { IUserRepository } from "domains/user/repositories/user.repository.interface"
-import { InvalidCredentialsError, InactiveAccountError } from "../../../errors/auth.errors"; // Example path
-import { ITokenService } from "application/services/token.service.interface";
+import type { UserEntity } from "@domain/user/entities/user.entity";
+import type { IUserRepository } from "@domain/user/repositories/user.repository.interface";
+import { InvalidCredentialsError, InactiveAccountError } from "@application/errors/auth.errors";
+import type { ITokenService } from "@application/services/token.service.interface";
 import bcrypt from "bcrypt";
 
 // This statement creates a new type that removes the password field from the user entity.

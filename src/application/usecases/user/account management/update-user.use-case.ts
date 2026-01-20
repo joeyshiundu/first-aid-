@@ -1,6 +1,6 @@
-import { CreateUserDTO } from "domains/user/dtos/create-user.dto";
-import { UserEntity } from "domains/user/entities/user.entity";
-import { IUserRepository } from "domains/user/repositories/user.repository.interface";
+import { CreateUserDTO } from "@domain/user/dtos/create-user.dto";
+import { UserEntity } from "@domain/user/entities/user.entity";
+import { IUserRepository } from "@domain/user/repositories/user.repository.interface";
 
 export class UpdateUserUseCase {
     constructor(private userRepository: IUserRepository) {}
@@ -12,5 +12,8 @@ export class UpdateUserUseCase {
         Object.assign(user, data);
         await this.userRepository.update(user);
         return user;
+    }
+}       return user;
+        return this.userRepository.update(user);
     }
 }

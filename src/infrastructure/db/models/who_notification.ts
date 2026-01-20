@@ -1,8 +1,8 @@
 import { Sequelize, DataTypes, Model, Optional } from 'sequelize';
-import { NotificationEntity } from 'domains/notification/entities/notification.entity';
+import { NotificationEntity } from '@domain/notification/entities/notification.entity';
 
 
-export interface WHONotificationCreationAttributes extends Optional<NotificationEntity, 'notification_id' | 'category' | 'expires_at'> {}
+export interface WHONotificationCreationAttributes extends Optional<NotificationEntity, 'notification_id' | 'category' | 'expires_at' | 'user_id' | 'is_read'> {}
 
 export class WHONotificationModel extends Model<NotificationEntity, WHONotificationCreationAttributes> implements NotificationEntity {
   public notification_id!: number;
@@ -10,11 +10,12 @@ export class WHONotificationModel extends Model<NotificationEntity, WHONotificat
   public message!: string;
   public category?: string;
   public priority!: 'low' | 'medium' | 'high';
-  public issued_by!: string;
+  public issuer_id!: number;
   public issued_at!: Date;
-  public expires_at!: Date;
+  public expires_at?: Date | null;
   public visible_to!: 'all' | 'specific';
-  public timestamp!: Date;
+  public user_id?: number;
+  public is_read!: boolean;
 }
 
 export function initWHONotificationModel(sequelize: Sequelize): typeof WHONotificationModel {
@@ -25,11 +26,12 @@ export function initWHONotificationModel(sequelize: Sequelize): typeof WHONotifi
       message: { type: DataTypes.TEXT, allowNull: false },
       category: { type: DataTypes.STRING(100), allowNull: true },
       priority: { type: DataTypes.ENUM('low', 'medium', 'high'), defaultValue: 'low' },
-      issued_by: { type: DataTypes.STRING(100), defaultValue: 'WHO' , allowNull: false },
+      issuer_id: { type: DataTypes.INTEGER, defaultValue: 1 , allowNull: false },
       issued_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
-      expires_at: { type: DataTypes.DATE, allowNull: true },
+      expires_at: { type: DataTypes.DATE, allowNull: true, defaultValue: null },
       visible_to: { type: DataTypes.ENUM('all', 'specific'), defaultValue: 'all' },
-      timestamp: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
+      user_id: { type: DataTypes.INTEGER, allowNull: true },
+      is_read: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
     }, 
     {
       sequelize,
